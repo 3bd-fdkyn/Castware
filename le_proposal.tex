@@ -1,0 +1,168 @@
+\documentclass[10pt, a4paper]{article}
+
+% Packages for strict 2-page layout and styling
+\usepackage[top=0.6in, bottom=0.6in, left=0.65in, right=0.65in]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{amsmath, amssymb}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{mathptmx} % Times New Roman font standard for academic proposals
+
+% Colors
+\definecolor{fastblue}{RGB}{0, 51, 102}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=fastblue,
+    urlcolor=fastblue,
+    citecolor=fastblue
+}
+
+% Compact section headings
+\titleformat{\section}{\large\bfseries\color{fastblue}}{\thesection.}{0.5em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{8pt}{4pt}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\titlespacing*{\subsection}{0pt}{6pt}{2pt}
+
+% Compact lists
+\setlist[itemize]{noitemsep, topsep=2pt, parsep=1pt, partopsep=0pt, leftmargin=1.5em}
+\setlist[enumerate]{noitemsep, topsep=2pt, parsep=1pt, partopsep=0pt, leftmargin=1.5em}
+
+% Header & Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize \textit{FAST-NUCES}}
+\fancyhead[R]{\footnotesize \textit{Cast-Ware: AI-Powered Phishing Detector}}
+\fancyfoot[C]{\footnotesize Page \thepage\ of 2}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+\begin{document}
+
+% ==================== HEADER BLOCK ====================
+\begin{center}
+    {\Large \textbf{NATIONAL UNIVERSITY OF COMPUTER AND EMERGING SCIENCES (FAST-NUCES)}}\\[2pt]
+    {\normalsize \textbf{Department of Software Engineering --- Semester Project}}\\[6pt]
+    {\LARGE \textbf{\color{fastblue} Cast-Ware: AI-Powered Phishing URL \& Email Detector}}
+\end{center}
+
+\vspace{2pt}
+\begin{tabularx}{\textwidth}{@{} >{\bfseries}l X >{\bfseries}l l @{}}
+    \toprule
+    Project Category: & R\&D (AI / Cyber Security / Web Tool) & Proposed Supervisor: & Dr./Mr./Ms. Sarah Abid \\
+    Batch / Semester: & Fall 2026 \\
+    \bottomrule
+\end{tabularx}
+
+\vspace{4pt}
+\begin{tabularx}{\textwidth}{@{} l X l l l @{}}
+    \toprule
+    \textbf{S.No} & \textbf{Student Name} & \textbf{Roll Number} & \textbf{Email Address}\\
+    \midrule
+    1 & Muhammad Abdullah & 22I-2672 & i222672@lhr.nu.edu.pk \\
+    2 & Hassan Raza & 22L-7725 & l267725@lhr.nu.edu.pk  \\
+    3 & Rana Ahsan Ahmad & 22L-7895 & l227895@lhr.nu.edu.pk  \\
+    \bottomrule
+\end{tabularx}
+
+% ==================== 1. ABSTRACT ====================
+\section{Abstract / Executive Summary}
+Phishing remains the primary initial access vector in modern cyberattacks, exploiting human trust via deceptive Uniform Resource Locators (URLs) and socially engineered emails. Traditional signature and blacklist mechanisms (e.g., Google Safe Browsing) suffer from severe latency against zero-day phishing sites and ephemeral domains. This project proposes \textbf{Cast-Ware}, an end-to-end, Explainable AI (XAI) web platform where users paste a suspicious URL or email body and immediately receive a risk verdict (Phishing vs.\ Safe), a calibrated confidence score, key threat indicators, and a human-readable explanation. By combining engineered lexical/structural URL features using gradient-boosted decision trees (Random Forest, XGBoost, LightGBM) with a fine-tuned transformer model (DistilBERT) for semantic text analysis, Cast-Ware ensures high resilience against obfuscated attacks while educating users via SHAP-driven feature attribution.
+
+% ==================== 2. PROBLEM STATEMENT ====================
+\section{Problem Statement \& Motivation}
+Modern threat actors deploy ephemeral phishing kits, subdomain chaining, homograph substitutions, and LLM-generated persuasive emails that bypass static rule filters before blacklists can index them. Furthermore, existing consumer and analyst tools operate as ``black boxes''—returning a binary label without explaining \textit{why} an input is dangerous. Non-technical users often ignore warnings they do not understand, while junior SOC analysts waste valuable triage time manually inspecting URL tokens and email headers. There is a pressing need for a fast, dataset-driven machine learning system capable of evaluating unindexed URLs and email text in real time while transparently surfacing the underlying indicators of compromise (IoCs).
+
+% ==================== 3. OBJECTIVES ====================
+\section{Project Objectives}
+\begin{enumerate}
+    \item \textbf{Lexical \& Structural URL Feature Extractor:} Engineer an automated pipeline extracting $30+$ intrinsic URL attributes (length ratios, special characters, subdomain count, Shannon entropy, HTTPS misuse, IP presence, and suspicious keywords).
+    \item \textbf{High-Accuracy Ensemble \& Deep Learning Models:} Train, tune, and benchmark strong tabular baselines (Random Forest, XGBoost, LightGBM) alongside a fine-tuned \textbf{DistilBERT} model for semantic email and sequence classification.
+    \item \textbf{Explainable AI (XAI) Integration:} Utilize SHAP (SHapley Additive exPlanations) and attention attribution to translate complex model weights into clear, user-friendly risk explanations and visual feature contribution charts.
+    \item \textbf{Interactive Web Application:} Build a responsive web interface (React + FastAPI) allowing seamless submission of URLs or email text with sub-second inference latency.
+\end{enumerate}
+
+% ==================== 4. LITERATURE REVIEW ====================
+\section{Literature Review \& Existing Systems}
+\begin{itemize}
+    \item \textbf{Blacklist Services (PhishTank, OpenPhish, Google Safe Browsing):} Provide near-zero false positives on known threats but fail entirely against newly registered zero-hour domains until manual verification occurs.
+    \item \textbf{VirusTotal:} Aggregates $70+$ third-party domain scanners but relies primarily on historical domain reputation rather than deep semantic evaluation of raw email text or novel lexical URL structures.
+    \item \textbf{Academic Benchmarks (PhiUSIIL, 2024):} Recent studies confirm that tree-based ensembles trained on lexical URL properties achieve $>98\%$ accuracy on large corpora ($100\text{k}$--$700\text{k}$ samples). Cast-Ware bridges the gap between academic models and practical usability by coupling dual URL/Email modalities with real-time SHAP explainability.
+\end{itemize}
+
+% ==================== 5. METHODOLOGY ====================
+\section{Proposed Methodology \& Architecture}
+\subsection{5.1 Datasets}
+The project leverages clean, high-volume public corpora ideal for robust training within an academic timeline:
+\begin{itemize}
+    \item \textbf{URL Corpora:} \textit{PhiUSIIL Phishing URL Dataset} ($235\text{k}$ samples), live verified \textit{PhishTank} feeds, and \textit{Kaggle Malicious URLs Dataset} ($651\text{k}$ samples spanning benign, phishing, defacement, and malware URLs).
+    \item \textbf{Email Corpora:} \textit{Enron Email Dataset} paired with the \textit{Nazario Phishing Corpus} and Kaggle Phishing Email collections ($18\text{k}+$ labeled emails).
+\end{itemize}
+
+\subsection{5.2 Feature Engineering (URL Pipeline)}
+Given a raw URL string $u$, our feature extraction module maps $u \mapsto \mathbf{x} \in \mathbb{R}^{d}$ without requiring external third-party WHOIS lookups (ensuring zero network latency and privacy). Extracted features include:
+\begin{itemize}
+    \item \textbf{Lexical Counts \& Ratios:} Total URL length $L_{\text{url}}$, hostname length $L_{\text{host}}$, path length, count of special symbols (\texttt{@}, \texttt{-}, \texttt{\_}, \texttt{?}, \texttt{=}, \texttt{\%}), digit-to-letter ratio, and subdomain depth ($n_{\text{sub}}$).
+    \item \textbf{Shannon Entropy ($H$):} Quantifies character randomness to detect algorithmically generated domains (DGAs) and obfuscated query strings:
+    $$H(X) = -\sum_{i=1}^{k} P(x_i) \log_2 P(x_i)$$
+    \item \textbf{Binary Heuristic Flags:} Raw IPv4/IPv6 address in hostname, deceptive \texttt{https} token embedded inside the domain/path, URL shortening service detection, and presence of high-risk social engineering tokens (\texttt{login}, \texttt{verify}, \texttt{account}, \texttt{update}, \texttt{secure}, \texttt{bank}).
+\end{itemize}
+
+\subsection{5.3 Classification \& Explainability Pipeline}
+\begin{enumerate}
+    \item \textbf{Tabular URL Classifier:} Feature vector $\mathbf{x}$ is evaluated by **Random Forest**, **XGBoost**, and **LightGBM** models. Hyperparameters are optimized via Optuna using Stratified $5$-Fold Cross-Validation.
+    \item \textbf{Semantic Email \& Sequence Classifier:} Email bodies (and raw URL text) are tokenized via WordPiece and passed into a fine-tuned **DistilBERT** architecture to capture contextual urgency, financial coercion, and spoofing patterns.
+    \item \textbf{XAI Risk Synthesizer:} For URLs, \textbf{TreeSHAP} computes exact Shapley values $\phi_i$ for each feature, ranking the top $k$ contributors pushing the base probability toward phishing. For emails, token-level attributions highlight suspicious phrases. A rule-guided template engine converts these top weights into natural language explanations.
+\end{enumerate}
+
+% ==================== 6. SCOPE & DELIVERABLES ====================
+\section{Project Scope \& Deliverables}
+\begin{itemize}
+    \item \textbf{In Scope:} Lexical/structural URL feature extraction, ML ensemble training (RF/XGBoost/LightGBM), DistilBERT fine-tuning for email text, SHAP-based explanation generation, FastAPI backend, and React web dashboard.
+    \item \textbf{Out of Scope:} Dynamic client-side webpage rendering (headless browser sandboxing) and enterprise mail-server (SMTP) gateway plugins, keeping the project computationally lightweight and achievable within two semesters.
+\end{itemize}
+
+% ==================== 7. TOOLS & TECHNOLOGIES ====================
+\section{Tools, Libraries \& Technologies}
+\begin{tabularx}{\textwidth}{@{} >{\bfseries}l X @{}}
+    \toprule
+    Programming Languages: & Python 3.11 (ML/Backend), TypeScript / JavaScript (Frontend) \\
+    Machine Learning \& NLP: & Scikit-Learn, XGBoost, LightGBM, PyTorch, HuggingFace Transformers (DistilBERT) \\
+    Explainable AI \& Data: & SHAP (TreeSHAP / PartitionSHAP), LIME, Pandas, NumPy, BeautifulSoup4, tldextract \\
+    Web Stack \& DevOps: & FastAPI, Uvicorn, React.js, Tailwind CSS, Docker, Git/GitHub \\
+    \bottomrule
+\end{tabularx}
+
+% ==================== 8. TIMELINE & WORK BREAKDOWN ====================
+\section{Work Breakdown Structure \& Tentative Timeline}
+\begin{tabularx}{\textwidth}{@{} l X l l @{}}
+    \toprule
+    \textbf{Phase} & \textbf{Key Tasks \& Milestones} & \textbf{Timeline} & \textbf{Lead} \\
+    \midrule
+    Phase 1 & Literature review, dataset aggregation (PhiUSIIL, PhishTank, Enron), data cleaning & Sep -- Oct 2026 & All Members \\
+    Phase 2 & URL lexical feature engineering pipeline ($30+$ features) \& exploratory data analysis & Nov 2026 & Member 1, 2 \\
+    Phase 3 & Training \& benchmarking Random Forest, XGBoost, LightGBM (\textbf{FYP-I Defense}) & Dec 2026 & Member 1, 3 \\
+    Phase 4 & Fine-tuning DistilBERT on phishing email corpora \& sequence evaluation & Jan -- Feb 2027 & Member 2, 3 \\
+    Phase 5 & SHAP explainability integration, natural language rule synthesizer, FastAPI backend & Mar 2027 & Member 1, 2 \\
+    Phase 6 & React frontend dashboard, end-to-end latency testing, ROC-AUC benchmarks, Thesis & Apr -- May 2027 & All Members \\
+    \bottomrule
+\end{tabularx}
+
+% ==================== 9. REFERENCES ====================
+\section{References}
+\footnotesize
+\begin{enumerate}[label={[\arabic*]}]
+    \item A. Prasad and S. Chandra, ``PhiUSIIL: A diverse security profile empowered phishing URL detection framework based on similarity index and incremental learning,'' \textit{Computers \& Security}, vol. 136, p. 103545, 2024.
+    \item S. M. Lundberg and S.-I. Lee, ``A unified approach to interpreting model predictions,'' in \textit{Advances in Neural Information Processing Systems (NeurIPS)}, vol. 30, 2017, pp. 4765--4774.
+    \item V. Sanh, L. Debut, J. Chaumond, and T. Wolf, ``DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter,'' \textit{arXiv preprint arXiv:1910.01108}, 2019.
+    \item M. Khonji, Y. Iraqi, and A. Jones, ``Phishing detection: a literature survey,'' \textit{IEEE Communications Surveys \& Tutorials}, vol. 15, no. 4, pp. 2091--2121, 2013.
+\end{enumerate}
+
+\end{document}
